@@ -1,0 +1,8 @@
+{
+  "accuracy": 0.9295,
+  "top3_accuracy": 0.9831,
+  "macro_f1": 0.9294,
+  "n_train": 10003,
+  "n_test": 3080,
+  "n_classes": 77
+}

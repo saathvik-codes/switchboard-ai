@@ -1,0 +1,10 @@
+torch>=2.2
+transformers>=4.40
+datasets>=2.19
+scikit-learn>=1.4
+joblib>=1.4
+langchain>=0.2
+langchain-core>=0.2
+langchain-ollama>=0.1
+fastapi>=0.110
+uvicorn[standard]>=0.29

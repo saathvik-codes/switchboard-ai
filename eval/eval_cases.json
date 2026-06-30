@@ -1,0 +1,14 @@
+[
+  {"id": "lost_card_explicit", "message": "I think my card was stolen, please freeze it", "expected_tool": "freeze_card"},
+  {"id": "lost_card_with_id", "message": "my card CARD-4521 was just stolen from my bag", "expected_tool": "freeze_card"},
+  {"id": "balance_direct", "message": "what is my account balance right now", "expected_tool": "check_balance"},
+  {"id": "balance_casual", "message": "how much money do I have", "expected_tool": "check_balance"},
+  {"id": "transactions_recent", "message": "can you show me my recent transactions", "expected_tool": "transaction_history"},
+  {"id": "transactions_spending", "message": "what have I spent money on lately", "expected_tool": "transaction_history"},
+  {"id": "dispute_charge", "message": "I was charged twice for the same purchase, I want this reversed", "expected_tool": "escalate_to_human"},
+  {"id": "fraud_claim", "message": "there's a transaction on my account I never made, this is fraud", "expected_tool": "escalate_to_human"},
+  {"id": "complaint", "message": "I've been on hold for an hour, I want to file a complaint", "expected_tool": "escalate_to_human"},
+  {"id": "general_fee_question", "message": "what are your monthly account fees", "expected_tool": null},
+  {"id": "card_replacement_timing", "message": "how long does a replacement card normally take to arrive", "expected_tool": null},
+  {"id": "supported_currencies", "message": "which currencies do you support for international transfers", "expected_tool": null}
+]
