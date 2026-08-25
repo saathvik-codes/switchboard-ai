@@ -84,6 +84,16 @@ curl -X POST http://localhost:8020/chat -H "Content-Type: application/json" \
   -d '{"message": "my card was stolen, please freeze it"}'
 ```
 
+## Changing the Dataset
+
+By default, the intent classifier is trained on the `banking77` dataset. However, you can change the training dataset to any other text classification dataset (such as `DeepPavlov/clinc_oos` or a custom dataset).
+
+To change the dataset:
+1. Open [`ml/train_classifier.py`](file:///c:/Users/saath/Downloads/switchboard-ai/ml/train_classifier.py).
+2. Modify the `load_dataset` call to load your target dataset (e.g., `load_dataset("DeepPavlov/clinc_oos", "plus")`).
+3. Update the fields extracted (e.g., text, labels) to match your dataset's structure.
+4. Run `python train_classifier.py` to train the new model and generate new classifier assets (`intent_classifier.joblib`, `label_names.json`, and `metrics.json`).
+
 ## Project structure
 
 ```

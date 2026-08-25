@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Switchboard — Customer Operations Console</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Top Navigation Bar -->
+        <header class="navbar">
+            <div class="brand">
+                <div class="brand-logo">
+                    <i data-lucide="terminal"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>Switchboard Console</h1>
+                    <span class="version">v1.2.0 (Dual-Model Pipeline)</span>
+                </div>
+            </div>
+            
+            <div class="system-status">
+                <div class="status-item">
+                    <i data-lucide="server"></i>
+                    <span class="status-label">API: <strong>Online</strong></span>
+                </div>
+                <div class="status-item">
+                    <i data-lucide="cpu" id="ollamaIcon"></i>
+                    <span class="status-label">LLM: <strong id="ollamaStatusLabel">Idle</strong></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Workspace -->
+        <main class="dashboard-grid">
+            
+            <!-- Left Panel: Chat Simulator -->
+            <section class="panel chat-simulator">
+                <div class="panel-header">
+                    <h2>Customer Interaction Feed</h2>
+                    <span class="panel-tag">Channel: Chat Widget</span>
+                </div>
+
+                <div class="chat-container">
+                    <!-- Chat Messages List -->
+                    <div class="chat-feed" id="chatFeed">
+                        <div class="system-notification">
+                            <p class="notification-title">System Initialization</p>
+                            <p class="notification-body">Switchboard banking agent is listening. Select a preset query below or type a message to start simulating client conversations.</p>
+                        </div>
+                    </div>
+
+                    <!-- Chat Loading Spinner -->
+                    <div class="chat-loading" id="chatLoading">
+                        <div class="spinner-ring"></div>
+                        <span id="loadingText">Agent is processing query...</span>
+                    </div>
+
+                    <!-- Chat Form Input -->
+                    <form class="chat-form" id="chatForm">
+                        <input type="text" id="chatInput" placeholder="Type a banking query (e.g., 'what is my balance?')..." required autocomplete="off">
+                        <button type="submit" class="btn-send">
+                            <span>Send</span>
+                            <i data-lucide="send"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Scenario presets bar at the bottom of the feed -->
+                <div class="scenarios-panel">
+                    <p class="panel-subtitle">Preset Simulation Scenarios</p>
+                    <div class="presets-row" id="presetsRow">
+                        <!-- Presets loaded dynamically from /presets -->
+                        <span class="italic" style="font-size: 0.72rem; color: var(--text-muted); padding: 0.25rem 0;">Fetching presets...</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel: Sleek Inspector Panel -->
+            <section class="panel inspector-workspace">
+                <div class="panel-header tab-header-row">
+                    <!-- Segmented Slide Controller (Tabs) -->
+                    <div class="segmented-control">
+                        <button class="tab-btn active" data-tab="telemetry">
+                            <i data-lucide="activity"></i>
+                            <span>System Telemetry</span>
+                        </button>
+                        <button class="tab-btn" data-tab="ledger">
+                            <i data-lucide="database"></i>
+                            <span>Account Ledger</span>
+                        </button>
+                        <button class="tab-btn" data-tab="pipeline">
+                            <i data-lucide="git-commit"></i>
+                            <span>Pipeline Graph</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tab Panel 1: Telemetry Inspector -->
+                <div class="tab-panel active" id="tab-telemetry">
+                    <div class="telemetry-grid">
+                        <!-- ML Intent Card -->
+                        <div class="telemetry-card" id="cardML">
+                            <div class="card-header">
+                                <span class="step-badge">01</span>
+                                <h3>ML Classifier (HuggingFace)</h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="empty-state">Waiting for query input...</div>
+                                <div class="telemetry-data hidden">
+                                    <div class="intent-rank-list" id="intentRankList">
+                                        <!-- Will be populated dynamically with Top 3 Intents progress bars -->
+                                    </div>
+                                    <p class="explanation-text">
+                                        Model: <code>all-MiniLM-L6-v2</code> (384d, 22M parameters). The top intent acts as context alignment for the LLM.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- LLM Agent Card -->
+                        <div class="telemetry-card" id="cardAgent">
+                            <div class="card-header">
+                                <span class="step-badge">02</span>
+                                <h3>Agent Execution (LangChain)</h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="empty-state">Waiting for query input...</div>
+                                <div class="telemetry-data hidden">
+                                    <div class="data-row">
+                                        <span class="data-label">Action Target:</span>
+                                        <span class="data-value highlight" id="lblAction">-</span>
+                                    </div>
+                                    <div class="data-column">
+                                        <span class="data-label">Extracted Parameters:</span>
+                                        <div class="param-editor">
+                                            <table class="param-table">
+                                                <tbody id="lblParamsTable"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="data-row status-box">
+                                        <span class="data-label">Tool Result:</span>
+                                        <span class="data-value italic" id="lblToolOutput">-</span>
+                                    </div>
+                                    <div class="llm-meta-row">
+                                        <span>Model: Llama 3.1:8b</span>
+                                        <span>Temp: 0.0</span>
+                                        <span>Framework: LangChain</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Panel 2: Live Ledger State (Simulated Database) -->
+                <div class="tab-panel" id="tab-ledger">
+                    <div class="ledger-container">
+                        <!-- Left Sub-column: debit card -->
+                        <div class="card-viewer">
+                            <!-- Interactive 3D debit card widget -->
+                            <div class="debit-card" id="bankCard">
+                                <div class="card-inner">
+                                    <div class="card-header-row">
+                                        <span class="bank-title">SWITCHBOARD</span>
+                                        <span class="status-pill" id="cardStatus">Loading...</span>
+                                    </div>
+                                    <div class="card-chip-row">
+                                        <div class="metallic-chip"></div>
+                                    </div>
+                                    <div class="card-number-row">
+                                        <span>••••</span><span>••••</span><span>••••</span><span>4521</span>
+                                    </div>
+                                    <div class="card-footer-row">
+                                        <div class="holder-details">
+                                            <span class="label">CARDHOLDER</span>
+                                            <span class="value">Loading...</span>
+                                        </div>
+                                        <div class="expiry-details">
+                                            <span class="label">EXPIRES</span>
+                                            <span class="value">08/30</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="card-tip">Hover card for 3D perspective</p>
+                        </div>
+
+                        <!-- Right Sub-column: Account Ledger Details -->
+                        <div class="account-ledger">
+                            <div class="ledger-header">
+                                <div class="ledger-title-group">
+                                    <h3>Account <strong>ACC-1001</strong></h3>
+                                    <span class="ledger-subtitle">Checking Account (GBP)</span>
+                                </div>
+                                <div class="ledger-balance-group">
+                                    <span class="label">CURRENT BALANCE</span>
+                                    <span class="balance" id="balanceAmount">Loading...</span>
+                                </div>
+                            </div>
+
+                            <!-- Transaction history list -->
+                            <div class="ledger-transactions">
+                                <h4>Recent Transactions Log</h4>
+                                <div class="transaction-table-wrapper">
+                                    <table class="transaction-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Merchant</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="transactionList">
+                                            <tr>
+                                                <td colspan="2" class="italic" style="text-align: center; color: var(--text-secondary); font-size: 0.75rem;">Fetching transaction ledger...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Panel 3: Pipeline Graph Visualizer -->
+                <div class="tab-panel" id="tab-pipeline">
+                    <div class="graph-container">
+                        <div class="graph-nodes">
+                            <div class="node text-node">
+                                <div class="node-label">User Query</div>
+                                <div class="node-val" id="graphUserQuery">"Waiting for query..."</div>
+                            </div>
+                            <div class="node-arrow"><i data-lucide="arrow-right"></i></div>
+                            <div class="node ml-node">
+                                <div class="node-label" id="graphMLLabel">1. Intent Classifier</div>
+                                <div class="node-val" id="graphMLIntent">"Waiting for query..."</div>
+                            </div>
+                            <div class="node-arrow"><i data-lucide="arrow-right"></i></div>
+                            <div class="node prompt-node">
+                                <div class="node-label">2. Prompt Context</div>
+                                <div class="node-val" id="graphPromptContext">"Waiting for query..."</div>
+                            </div>
+                            <div class="node-arrow"><i data-lucide="arrow-right"></i></div>
+                            <div class="node agent-node">
+                                <div class="node-label">3. Ollama LLM</div>
+                                <div class="node-val" id="graphAgentAction">"Waiting for query..."</div>
+                            </div>
+                            <div class="node-arrow"><i data-lucide="arrow-right"></i></div>
+                            <div class="node db-node">
+                                <div class="node-label">4. Mock Database State</div>
+                                <div class="node-val" id="graphDBUpdate">"Waiting for query..."</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/script.js"></script>
+</body>
+</html>

@@ -56,7 +56,7 @@ giving a short direct answer.
 
 
 def handle_message(message: str, llm=None) -> dict:
-    intent_predictions = classify_intent(message, top_k=1)
+    intent_predictions = classify_intent(message, top_k=3)
     top_intent = intent_predictions[0]
 
     chat = llm or ChatOllama(model="llama3.1:8b", temperature=0)
@@ -88,6 +88,7 @@ def handle_message(message: str, llm=None) -> dict:
         "message": message,
         "classified_intent": top_intent["intent"],
         "intent_confidence": top_intent["confidence"],
+        "all_intents": intent_predictions,
         "tool_calls": tool_results,
         "response": final_text,
     }

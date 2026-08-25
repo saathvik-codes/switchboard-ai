@@ -1,0 +1,1024 @@
+/* Premium Black & White Minimalist Design System */
+
+:root {
+    --bg-app: #000000;
+    --bg-panel: #0a0a0a;
+    --bg-panel-hover: #171717;
+    --border-color: #262626;
+    
+    --text-primary: #ffffff;
+    --text-secondary: #a3a3a3;
+    --text-muted: #525252;
+    
+    --color-green: #ffffff;
+    --color-red: #ef4444;
+    --color-yellow: #fbbf24;
+    
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Custom Scrollbars globally */
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+::-webkit-scrollbar-track {
+    background: #000000;
+}
+::-webkit-scrollbar-thumb {
+    background: #262626;
+    border-radius: 2.5px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #404040;
+}
+
+body {
+    background-color: var(--bg-app);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 0;
+}
+
+/* App Main Layout */
+.app-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Top Navigation Bar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--bg-panel);
+    border-bottom: 1px solid var(--border-color);
+    height: 60px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    color: var(--text-primary);
+}
+
+.brand-logo svg, .brand-logo i {
+    width: 18px;
+    height: 18px;
+}
+
+.brand-text h1 {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.brand-text .version {
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    display: block;
+    margin-top: -0.1rem;
+}
+
+.system-status {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.status-item i {
+    width: 14px;
+    height: 14px;
+    color: var(--text-secondary);
+}
+
+.status-item strong {
+    color: var(--text-primary);
+}
+
+/* Dashboard Workspace Grid */
+.dashboard-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 460px 1fr;
+    height: calc(100vh - 60px);
+    overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        overflow-y: auto;
+    }
+}
+
+/* Panel Defaults */
+.panel {
+    background-color: var(--bg-panel);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.9rem 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+    height: 52px;
+}
+
+.panel-header h2 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+}
+
+.panel-tag {
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    background-color: #121212;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+}
+
+/* Left Panel: Chat Simulator */
+.chat-simulator {
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.chat-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.chat-feed {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Messages */
+.message {
+    display: flex;
+    flex-direction: column;
+}
+
+.msg-bubble {
+    max-width: 85%;
+    padding: 0.65rem 0.85rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+
+.user-msg {
+    align-items: flex-end;
+}
+
+.user-msg .msg-bubble {
+    background-color: #ffffff;
+    color: #000000;
+    font-weight: 500;
+}
+
+.assistant-msg {
+    align-items: flex-start;
+}
+
+.assistant-msg .msg-bubble {
+    background-color: #121212;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+/* System Notifications */
+.system-notification {
+    background-color: #050505;
+    border: 1px solid var(--border-color);
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+}
+
+.notification-title {
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.15rem;
+}
+
+.notification-body {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+/* Chat Input Bar */
+.chat-form {
+    padding: 0.75rem 1.25rem;
+    border-top: 1px solid var(--border-color);
+    background-color: #050505;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.chat-form input {
+    flex: 1;
+    background-color: #121212;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 0.5rem 0.8rem;
+    color: #fff;
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    transition: all 0.2s ease;
+}
+
+.chat-form input:focus {
+    outline: none;
+    border-color: #ffffff;
+}
+
+.btn-send {
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    padding: 0.5rem 0.85rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.2s ease;
+}
+
+.btn-send i {
+    width: 12px;
+    height: 12px;
+}
+
+.btn-send:hover {
+    background-color: #e5e5e5;
+    border-color: #e5e5e5;
+}
+
+/* Chat loading indicator */
+.chat-loading {
+    display: none; /* controlled by JS */
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    background-color: #050505;
+    border-top: 1px solid var(--border-color);
+}
+
+.spinner-ring {
+    width: 12px;
+    height: 12px;
+    border: 2px solid #262626;
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Scenarios Preset Bar */
+.scenarios-panel {
+    padding: 0.85rem 1.25rem;
+    border-top: 1px solid var(--border-color);
+    background-color: #050505;
+}
+
+.panel-subtitle {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.presets-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.preset-btn {
+    background-color: #0a0a0a;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 0.3rem 0.5rem;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: all 0.2s ease;
+}
+
+.preset-btn i {
+    width: 12px;
+    height: 12px;
+}
+
+.preset-btn:hover {
+    background-color: #171717;
+    border-color: #525252;
+    color: var(--text-primary);
+}
+
+/* Right Tab Workspace Layout */
+.inspector-workspace {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    background-color: #050505;
+}
+
+.tab-header-row {
+    padding: 0 1.25rem;
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-panel);
+    height: 52px;
+}
+
+/* Segmented Slide Control (Tabs) */
+.segmented-control {
+    display: flex;
+    gap: 0.25rem;
+    background-color: #121212;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 0.25rem;
+}
+
+.tab-btn {
+    background: transparent;
+    border: none;
+    border-radius: 16px;
+    color: var(--text-secondary);
+    padding: 0.35rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: all 0.15s ease-out;
+}
+
+.tab-btn i {
+    width: 12px;
+    height: 12px;
+    color: var(--text-secondary);
+}
+
+.tab-btn.active {
+    background-color: #ffffff;
+    color: #000000;
+    font-weight: 600;
+}
+
+.tab-btn.active i {
+    color: #000000;
+}
+
+/* Tab Panels Visibility */
+.tab-panel {
+    display: none;
+    flex: 1;
+    height: calc(100% - 52px);
+    overflow-y: auto;
+    padding: 1.5rem;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+/* Tab 1: Telemetry Inspector */
+.telemetry-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+}
+
+@media (max-width: 768px) {
+    .telemetry-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.telemetry-card {
+    background-color: #0a0a0a;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.telemetry-card .card-header {
+    background-color: #121212;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.55rem 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.step-badge {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #ffffff;
+    background-color: #262626;
+    padding: 0.05rem 0.3rem;
+    border-radius: 3px;
+}
+
+.telemetry-card .card-header h3 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.telemetry-card .card-content {
+    padding: 0.9rem;
+}
+
+.telemetry-card .empty-state {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-style: italic;
+    text-align: center;
+    padding: 1.5rem 0;
+}
+
+.telemetry-data {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.data-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+}
+
+.data-column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-top: 0.25rem;
+}
+
+.data-label {
+    color: var(--text-secondary);
+}
+
+.data-value {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.font-mono {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    background-color: #121212;
+    padding: 0.05rem 0.25rem;
+    border-radius: 3px;
+    border: 1px solid var(--border-color);
+}
+
+.highlight {
+    font-weight: 600;
+}
+
+.progress-track {
+    height: 3px;
+    background-color: #121212;
+    border-radius: 1.5px;
+    overflow: hidden;
+    margin: 0.15rem 0;
+    border: 1px solid #1a1a1a;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0;
+    background-color: #ffffff;
+    border-radius: 1.5px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.explanation-text {
+    font-size: 0.68rem;
+    color: var(--text-secondary);
+    line-height: 1.45;
+    margin-top: 0.5rem;
+    border-top: 1px dashed var(--border-color);
+    padding-top: 0.5rem;
+}
+
+/* Parameter Grid Table */
+.param-editor {
+    background-color: #121212;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.param-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+}
+
+.param-table td {
+    padding: 0.35rem 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.param-table td:first-child {
+    color: var(--text-secondary);
+    border-right: 1px solid var(--border-color);
+    width: 35%;
+}
+
+.param-table td:last-child {
+    color: #ffffff;
+}
+
+.status-box {
+    margin-top: 0.25rem;
+    padding: 0.4rem 0.6rem;
+    background-color: #121212;
+    border-radius: 4px;
+    border-left: 2px solid #ffffff;
+    font-size: 0.72rem;
+    line-height: 1.4;
+}
+
+/* Tab 2: Account Ledger State */
+.ledger-container {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 2rem;
+    background-color: #0a0a0a;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    align-items: flex-start;
+}
+
+@media (max-width: 768px) {
+    .ledger-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.card-viewer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    perspective: 1000px;
+}
+
+.card-tip {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Premium Minimalist Debit Card Widget */
+.debit-card {
+    width: 100%;
+    aspect-ratio: 1.586/1;
+    min-height: 140px;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.1s ease;
+    transform-style: preserve-3d;
+    background-color: #0c0c0c;
+    border: 1px solid var(--border-color);
+}
+
+.debit-card.active {
+    background: linear-gradient(135deg, #171717 0%, #050505 100%);
+}
+
+.debit-card.frozen {
+    background: linear-gradient(135deg, #260a0a 0%, #050505 100%);
+    border-color: rgba(239, 68, 68, 0.4);
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.15);
+}
+
+.card-inner {
+    padding: 0.85rem 1rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transform: translateZ(20px);
+}
+
+.card-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bank-title {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.status-pill {
+    font-size: 0.58rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.1rem 0.4rem;
+    border-radius: 2px;
+    border: 1px solid var(--border-color);
+    background-color: #121212;
+    color: var(--text-secondary);
+}
+
+.debit-card.active .status-pill {
+    border-color: var(--border-color);
+    color: #ffffff;
+}
+
+.debit-card.frozen .status-pill {
+    background-color: rgba(239, 68, 68, 0.05);
+    color: var(--color-red);
+    border-color: rgba(239, 68, 68, 0.2);
+    animation: flashRed 1.5s infinite;
+}
+
+@keyframes flashRed {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.card-chip-row {
+    margin-top: 0.1rem;
+}
+
+.metallic-chip {
+    width: 22px;
+    height: 16px;
+    background: #333333;
+    border-radius: 2px;
+    border: 1px solid var(--border-color);
+}
+
+.card-number-row {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.85);
+    display: flex;
+    gap: 0.5rem;
+    margin: 0.2rem 0;
+}
+
+.card-footer-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.card-footer-row .label {
+    display: block;
+    font-size: 0.5rem;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+    margin-bottom: 0.05rem;
+}
+
+.card-footer-row .value {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: #ffffff;
+}
+
+/* Account Ledger details column */
+.account-ledger {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.ledger-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+.ledger-title-group h3 {
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.ledger-subtitle {
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+}
+
+.ledger-balance-group {
+    text-align: right;
+}
+
+.ledger-balance-group .label {
+    font-size: 0.58rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.02em;
+}
+
+.ledger-balance-group .balance {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    display: block;
+    line-height: 1.2;
+}
+
+.ledger-transactions h4 {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 0.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.transaction-table-wrapper {
+    max-height: 120px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: #0c0c0c;
+    padding: 0.25rem 0.5rem;
+}
+
+.transaction-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.72rem;
+}
+
+.transaction-table th {
+    text-align: left;
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: 0.25rem 0;
+    font-size: 0.65rem;
+    border-bottom: 1px solid var(--border-color);
+    text-transform: uppercase;
+}
+
+.transaction-table td {
+    padding: 0.3rem 0;
+    border-bottom: 1px solid #171717;
+}
+
+.transaction-table tr:last-child td {
+    border-bottom: none;
+}
+
+.merchant-name {
+    color: var(--text-secondary);
+}
+
+.amount {
+    text-align: right;
+    font-weight: 600;
+}
+
+.amount.positive {
+    color: #ffffff;
+}
+
+.amount.negative {
+    color: #a3a3a3;
+}
+
+/* Tab 3: Graph visualizer panel */
+.graph-container {
+    background-color: #0a0a0a;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.graph-nodes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 440px;
+    position: relative;
+}
+
+.graph-nodes::before {
+    content: '';
+    position: absolute;
+    top: 25px;
+    bottom: 25px;
+    left: 50%;
+    width: 1px;
+    background-color: var(--border-color);
+    z-index: 1;
+}
+
+.node {
+    border: 1px solid var(--border-color);
+    background-color: #050505;
+    border-radius: 6px;
+    padding: 0.65rem 0.85rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+    z-index: 2;
+}
+
+.node-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.node-val {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: #ffffff;
+    background-color: #000000;
+    border: 1px solid var(--border-color);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    max-width: 240px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.node-arrow {
+    display: flex;
+    justify-content: center;
+    color: var(--text-muted);
+    position: relative;
+    z-index: 2;
+    background-color: #0a0a0a;
+    width: fit-content;
+    margin: 0 auto;
+    padding: 0.05rem 0.4rem;
+}
+
+.node-arrow i {
+    width: 14px;
+    height: 14px;
+    transform: rotate(90deg); /* down direction in column view */
+}
+
+/* Animations and helpers */
+.positive-flash {
+    animation: flashWhite 0.8s ease;
+}
+
+@keyframes flashWhite {
+    0% { color: #fff; }
+    50% { color: #fff; text-shadow: 0 0 8px rgba(255, 255, 255, 0.4); }
+    100% { color: #fff; }
+}
+
+.tx-flash {
+    animation: flashRow 0.8s ease;
+}
+
+@keyframes flashRow {
+    0% { background-color: transparent; }
+    50% { background-color: #171717; }
+    100% { background-color: transparent; }
+}
+
+#ollamaIcon.pulse {
+    animation: pulseIcon 1.5s infinite ease-in-out;
+}
+
+@keyframes pulseIcon {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.12); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Telemetry Rank List and Meta Styles */
+.intent-rank-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.intent-rank-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.intent-rank-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+}
+
+.intent-rank-name {
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+}
+
+.intent-rank-score {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.llm-meta-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    border-top: 1px dashed var(--border-color);
+    padding-top: 0.5rem;
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
