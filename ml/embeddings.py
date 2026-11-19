@@ -15,8 +15,6 @@ import os
 os.environ.setdefault("USE_TF", "0")
 
 import numpy as np
-import torch
-from transformers import AutoModel, AutoTokenizer
 
 MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 
@@ -27,13 +25,17 @@ _model = None
 def _load():
     global _tokenizer, _model
     if _model is None:
+        # imported here, not at the top: the API and agent import this module, and torch/transformers (a ~2 GB
+        # install) are only needed when a message is actually embedded, so tests and tooling can run without them
+        from transformers import AutoModel, AutoTokenizer
         _tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
         _model = AutoModel.from_pretrained(MODEL_NAME)
         _model.eval()
     return _tokenizer, _model
 
 
-def _mean_pool(token_embeddings: torch.Tensor, attention_mask: torch.Tensor) -> torch.Tensor:
+def _mean_pool(token_embeddings, attention_mask):
+    import torch
     mask = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
     summed = torch.sum(token_embeddings * mask, dim=1)
     counts = torch.clamp(mask.sum(dim=1), min=1e-9)
@@ -41,6 +43,7 @@ def _mean_pool(token_embeddings: torch.Tensor, attention_mask: torch.Tensor) -> 
 
 
 def embed(texts: list[str], batch_size: int = 64) -> np.ndarray:
+    import torch
     tokenizer, model = _load()
     all_embeddings = []
     with torch.no_grad():

@@ -124,3 +124,16 @@ the eval results — is real and reproducible.
 
 banking77 dataset (Casanueva et al., 2020, "Efficient Intent Detection
 with Dual Sentence Encoders"), via HuggingFace Datasets.
+
+## Tests
+
+```bash
+pip install -r requirements-dev.txt     # light: no torch/transformers needed
+python -m pytest -q                     # 27 tests
+```
+
+The suite covers the banking tools, the agent (with a scripted stand-in for the LLM: tool dispatch, the classifier hint,
+a model that names a tool that doesn't exist, arguments of the wrong shape), the API (including rejecting empty or
+oversized messages), the classifier artifact (ranking, labels, and that the committed metrics support the numbers above),
+and the eval cases. The real transformer and the real Ollama model are only used by `ml/train_classifier.py` and
+`eval/run_eval.py`. CI runs the suite on Python 3.11, 3.12 and 3.13.

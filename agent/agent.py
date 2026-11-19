@@ -21,9 +21,6 @@ from pathlib import Path
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_ollama import ChatOllama
 
-if sys.platform == "win32":
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
-
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "ml"))
 from predict import classify_intent  # noqa: E402
 from tools import ALL_TOOLS  # noqa: E402
@@ -55,6 +52,21 @@ giving a short direct answer.
 """
 
 
+TOOLS_BY_NAME = {t.name: t for t in ALL_TOOLS}
+
+
+def run_tool(name: str, args: dict) -> str:
+    """Run one tool call from the model. A model can name a tool that doesn't exist or pass arguments of the wrong
+    shape; either becomes a message the model can read and recover from, never an exception that fails the request."""
+    tool = TOOLS_BY_NAME.get(name)
+    if tool is None:
+        return f"Error: there is no tool called '{name}'. Available tools: {', '.join(TOOLS_BY_NAME)}."
+    try:
+        return tool.invoke(args)
+    except Exception as e:
+        return f"Error: the {name} tool could not run with those arguments ({type(e).__name__})."
+
+
 def handle_message(message: str, llm=None) -> dict:
     intent_predictions = classify_intent(message, top_k=3)
     top_intent = intent_predictions[0]
@@ -66,11 +78,8 @@ def handle_message(message: str, llm=None) -> dict:
     response = chat_with_tools.invoke([system, HumanMessage(content=message)])
 
     tool_results = []
-    tools_by_name = {t.name: t for t in ALL_TOOLS}
     for call in response.tool_calls:
-        tool = tools_by_name[call["name"]]
-        result = tool.invoke(call["args"])
-        tool_results.append({"tool": call["name"], "args": call["args"], "result": result})
+        tool_results.append({"tool": call["name"], "args": call["args"], "result": run_tool(call["name"], call["args"])})
 
     if tool_results:
         followup = chat.invoke([
@@ -95,6 +104,8 @@ def handle_message(message: str, llm=None) -> dict:
 
 
 if __name__ == "__main__":
+    if sys.platform == "win32":     # only for this demo's printed output; never at import time
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
     for msg in [
         "my card was stolen, the number is CARD-4521",
         "what's my balance?",
