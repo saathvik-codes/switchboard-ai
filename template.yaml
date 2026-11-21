@@ -1,0 +1,65 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Switchboard on AWS - the agent API on Lambda (container image with the transformer baked in) behind an API Gateway
+  HTTP API, loading the trained intent classifier from S3. Deploy with: sam build && sam deploy --guided, then upload
+  ml/artifacts/* to s3://<ModelBucket>/switchboard/v1/
+
+Parameters:
+  OllamaBaseUrl:
+    Type: String
+    Description: URL of the Ollama server running the tool-calling model (it has to be reachable from AWS).
+  OllamaModel:
+    Type: String
+    Default: llama3.1:8b
+
+Globals:
+  Function:
+    Timeout: 60
+    MemorySize: 3008
+    Architectures: [x86_64]
+
+Resources:
+  ModelBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+
+  AgentFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      Environment:
+        Variables:
+          MODEL_BUCKET: !Ref ModelBucket
+          MODEL_PREFIX: switchboard/v1
+          OLLAMA_BASE_URL: !Ref OllamaBaseUrl
+          OLLAMA_MODEL: !Ref OllamaModel
+      Policies:
+        - S3ReadPolicy:
+            BucketName: !Ref ModelBucket
+      Events:
+        Api:
+          Type: HttpApi
+    Metadata:
+      Dockerfile: Dockerfile.lambda
+      DockerContext: .
+      DockerTag: python3.12-v1
+
+Outputs:
+  ApiUrl:
+    Description: Base URL of the agent API
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/"
+  ModelBucketName:
+    Description: Upload ml/artifacts/* to s3://<this>/switchboard/v1/
+    Value: !Ref ModelBucket

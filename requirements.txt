@@ -8,3 +8,5 @@ langchain-core>=0.2
 langchain-ollama>=0.1
 fastapi>=0.110
 uvicorn[standard]>=0.29
+boto3>=1.34          # model artifacts from S3 (AWS deployment)
+mangum>=0.17         # FastAPI on AWS Lambda

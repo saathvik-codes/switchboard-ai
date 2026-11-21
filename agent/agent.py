@@ -15,6 +15,7 @@ actually good at (parameter extraction, tool selection, natural response),
 plays to each component's strength.
 """
 import io
+import os
 import sys
 from pathlib import Path
 
@@ -71,7 +72,8 @@ def handle_message(message: str, llm=None) -> dict:
     intent_predictions = classify_intent(message, top_k=3)
     top_intent = intent_predictions[0]
 
-    chat = llm or ChatOllama(model="llama3.1:8b", temperature=0)
+    chat = llm or ChatOllama(model=os.getenv("OLLAMA_MODEL", "llama3.1:8b"), temperature=0,
+                             base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"))
     chat_with_tools = chat.bind_tools(ALL_TOOLS)
 
     system = SystemMessage(content=SYSTEM_PROMPT.format(intent=top_intent["intent"], confidence=top_intent["confidence"]))

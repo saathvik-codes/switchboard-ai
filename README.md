@@ -129,7 +129,7 @@ with Dual Sentence Encoders"), via HuggingFace Datasets.
 
 ```bash
 pip install -r requirements-dev.txt     # light: no torch/transformers needed
-python -m pytest -q                     # 27 tests
+python -m pytest -q                     # 33 tests
 ```
 
 The suite covers the banking tools, the agent (with a scripted stand-in for the LLM: tool dispatch, the classifier hint,
@@ -137,3 +137,15 @@ a model that names a tool that doesn't exist, arguments of the wrong shape), the
 oversized messages), the classifier artifact (ranking, labels, and that the committed metrics support the numbers above),
 and the eval cases. The real transformer and the real Ollama model are only used by `ml/train_classifier.py` and
 `eval/run_eval.py`. CI runs the suite on Python 3.11, 3.12 and 3.13.
+
+## Deploy on AWS
+
+```bash
+sam build && sam deploy --guided                 # asks for the Ollama URL; prints ApiUrl and ModelBucketName
+aws s3 cp ml/artifacts/ s3://<ModelBucketName>/switchboard/v1/ --recursive
+```
+`template.yaml` creates an API Gateway HTTP API, the agent as a container-image Lambda (CPU PyTorch, with the embedding
+model baked into the image so a cold start doesn't download it), and a private, encrypted, versioned S3 bucket for the
+trained classifier. The function's role can only read that bucket. Uploading a retrained model to S3 updates the service
+without a redeploy. The tool-calling model runs on Ollama, which has to be reachable from AWS (`OllamaBaseUrl`). The S3
+loading is tested against moto's in-memory AWS, the template is checked with `cfn-lint`, and CI builds the Lambda image.

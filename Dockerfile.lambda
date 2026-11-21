@@ -1,0 +1,15 @@
+# Lambda container image (template.yaml). CPU-only torch keeps the image small enough for Lambda, and the embedding
+# model is downloaded at build time so a cold start doesn't fetch it from Hugging Face.
+FROM public.ecr.aws/lambda/python:3.12
+ENV HF_HOME=/opt/hf USE_TF=0
+COPY requirements.txt ${LAMBDA_TASK_ROOT}/
+RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu \
+ && pip install --no-cache-dir -r ${LAMBDA_TASK_ROOT}/requirements.txt
+RUN python -c "from transformers import AutoModel, AutoTokenizer; m='sentence-transformers/all-MiniLM-L6-v2'; AutoTokenizer.from_pretrained(m); AutoModel.from_pretrained(m)"
+COPY agent ${LAMBDA_TASK_ROOT}/agent
+COPY api ${LAMBDA_TASK_ROOT}/api
+COPY ml ${LAMBDA_TASK_ROOT}/ml
+COPY eval ${LAMBDA_TASK_ROOT}/eval
+COPY static ${LAMBDA_TASK_ROOT}/static
+COPY lambda_handler.py ${LAMBDA_TASK_ROOT}/
+CMD ["lambda_handler.handler"]
